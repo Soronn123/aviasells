@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Airport{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold mb-6">Add New Airport</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="space-y-4">
+            <div>
+                <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Airport Name
+                </label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.name.errors|join:", " }}</p>
+                {% endif %}
+                <p class="mt-1 text-sm text-gray-500">Example: Sheremetyevo International Airport</p>
+            </div>
+            
+            <div>
+                <label for="{{ form.city.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    City
+                </label>
+                {{ form.city }}
+                {% if form.city.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.city.errors|join:", " }}</p>
+                {% endif %}
+                <p class="mt-1 text-sm text-gray-500">Select city from list</p>
+            </div>
+        </div>
+        
+        <div class="mt-6 flex justify-between">
+            <a href="{% url 'manager_dashboard' %}" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Cancel
+            </a>
+            <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                Save Airport
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+// Автоматическое предложение названия аэропорта при выборе города
+document.getElementById('id_city').addEventListener('change', function() {
+    const cityName = this.options[this.selectedIndex].text.split(',')[0].trim();
+    const airportField = document.getElementById('id_name');
+    if (!airportField.value) {
+        airportField.value = cityName + ' International Airport';
+    }
+});
+</script>
+{% endblock %}

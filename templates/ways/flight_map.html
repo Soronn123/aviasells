@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="relative" style="height: calc(100vh - 180px);">
+  <!-- Контейнер карты - теперь занимает не всю высоту -->
+  <div id="flightMap" class="h-[70%] w-full rounded-lg shadow-xl bg-gray-50"></div>
+  
+  <!-- Панель выбора рейсов - теперь с большим z-index и фиксированной высотой -->
+  <div class="absolute bottom-0 left-0 right-0 h-[30%] bg-white bg-opacity-95 backdrop-blur-sm rounded-t-lg shadow-lg z-20 p-4 border-t border-gray-200 overflow-hidden">
+    <h3 class="font-bold text-gray-800 mb-3">Available Flights</h3>
+    <div class="flex space-x-4 overflow-x-auto pb-2" style="scrollbar-width: thin;">
+      {% for flight in flights %}
+      <div class="flight-card m-2 min-w-[280px] bg-white p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] border border-gray-200"
+           data-flight-id="{{ flight.id }}"
+           data-departure-lat="{{ flight.departure.city.latitude }}"
+           data-departure-lng="{{ flight.departure.city.longitude }}"
+           data-arrival-lat="{{ flight.arrival.city.latitude }}"
+           data-arrival-lng="{{ flight.arrival.city.longitude }}"
+           data-flight-number="{{ flight.flight_number }}"
+           data-departure-city="{{ flight.departure.city.name }} ({{ flight.departure.code }})"
+           data-arrival-city="{{ flight.arrival.city.name }} ({{ flight.arrival.code }})"
+           data-departure-time="{{ flight.departure_time|date:'M d, Y H:i' }}"
+           data-arrival-time="{{ flight.arrival_time|date:'M d, Y H:i' }}">
+        <div class="flex items-start">
+          <span class="material-icons text-blue-500 mr-2">flight_takeoff</span>
+          <div>
+            <h4 class="font-bold text-gray-800">{{ flight.flight_number }}</h4>
+            <p class="text-gray-600">{{ flight.departure.city.name }} → {{ flight.arrival.city.name }}</p>
+            <p class="text-sm text-gray-500">{{ flight.departure_time|date:"M d, Y H:i" }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 1. Инициализация карты со светлой темой
+  const map = L.map('flightMap', {
+    zoomControl: true,
+    attributionControl: false
+  }).setView([30, 0], 2);
+
+  // 2. Светлая тема карты (OpenStreetMap)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  // 3. Функция для отображения маршрута
+  function showFlightRoute(flightCard) {
+    const depCoords = [
+      parseFloat(flightCard.dataset.departureLat),
+      parseFloat(flightCard.dataset.departureLng)
+    ];
+    const arrCoords = [
+      parseFloat(flightCard.dataset.arrivalLat),
+      parseFloat(flightCard.dataset.arrivalLng)
+    ];
+    
+    // Очищаем предыдущие элементы
+    map.eachLayer(layer => {
+      if (layer instanceof L.Polyline || layer instanceof L.Marker) {
+        map.removeLayer(layer);
+      }
+    });
+    
+    // 4. Маркеры для светлой темы
+    const planeIcon = L.divIcon({
+      html: '<div class="relative"><span class="material-icons text-3xl text-blue-600">flight</span></div>',
+      className: '',
+      iconSize: [32, 32]
+    });
+    
+    L.marker(depCoords, {
+      icon: planeIcon,
+      rotationAngle: getBearing(depCoords, arrCoords)
+    }).addTo(map)
+      .bindPopup(`<div class="font-bold">${flightCard.dataset.flightNumber}</div>
+                <div class="text-sm">Departure: ${flightCard.dataset.departureCity}</div>`);
+    
+    L.marker(arrCoords, {
+      icon: L.divIcon({
+        html: '<span class="material-icons text-3xl text-green-600">flight_land</span>',
+        className: '',
+        iconSize: [32, 32]
+      })
+    }).addTo(map)
+      .bindPopup(`<div class="font-bold">${flightCard.dataset.flightNumber}</div>
+                <div class="text-sm">Arrival: ${flightCard.dataset.arrivalCity}</div>`);
+    
+    // 5. Анимация маршрута (более контрастная для светлого фона)
+    const line = L.polyline([depCoords], {
+      color: '#2563eb', // Более насыщенный синий
+      weight: 4,
+      dashArray: '10, 10',
+      opacity: 0.8
+    }).addTo(map);
+    
+    const steps = 100;
+    const duration = 3000;
+    let currentStep = 0;
+    
+    const latStep = (arrCoords[0] - depCoords[0]) / steps;
+    const lngStep = (arrCoords[1] - depCoords[1]) / steps;
+    
+    const animateLine = () => {
+      if (currentStep >= steps) {
+        map.removeLayer(line);
+        L.polyline.antPath([depCoords, arrCoords], {
+          color: "#2563eb",
+          weight: 4,
+          dashArray: [15, 30],
+          pulseColor: "#3b82f6", // Яркий синий для пульсации
+          delay: 1000
+        }).addTo(map);
+        return;
+      }
+      
+      const currentPoint = [
+        depCoords[0] + latStep * currentStep,
+        depCoords[1] + lngStep * currentStep
+      ];
+      
+      line.setLatLngs([depCoords, currentPoint]);
+      currentStep++;
+      setTimeout(animateLine, duration / steps);
+    };
+    
+    animateLine();
+    
+    // 6. Центрирование карты
+    map.fitBounds([depCoords, arrCoords], {
+      padding: [50, 50],
+      animate: true
+    });
+  }
+  
+  // 7. Расчет направления (остается без изменений)
+  function getBearing(start, end) {
+    const startLat = start[0] * Math.PI / 180;
+    const startLng = start[1] * Math.PI / 180;
+    const endLat = end[0] * Math.PI / 180;
+    const endLng = end[1] * Math.PI / 180;
+    
+    let bearing = Math.atan2(
+      Math.sin(endLng - startLng) * Math.cos(endLat),
+      Math.cos(startLat) * Math.sin(endLat) - 
+      Math.sin(startLat) * Math.cos(endLat) * Math.cos(endLng - startLng)
+    );
+    
+    bearing = bearing * 180 / Math.PI;
+    return (bearing + 360) % 360;
+  }
+  
+  // 8. Обработчики событий
+  document.querySelectorAll('.flight-card').forEach(card => {
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.flight-card').forEach(c => {
+        c.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50');
+      });
+      this.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50');
+      showFlightRoute(this);
+    });
+  });
+  
+  // 9. Автовыбор первого рейса
+  setTimeout(() => {
+    const firstCard = document.querySelector('.flight-card');
+    if (firstCard) {
+      firstCard.click();
+      firstCard.classList.add('animate__animated', 'animate__pulse');
+    }
+  }, 500);
+  
+  // 10. Ресайз карты
+  setTimeout(() => map.invalidateSize(), 100);
+});
+</script>
+
+<style>
+  /* Гарантируем правильные размеры */
+  #flightMap {
+    height: 70% !important;
+    width: 100% !important;
+  }
+  
+  /* Стили для панели рейсов */
+  .absolute.bottom-0 {
+    z-index: 1000; /* Выше чем карта */
+  }
+  
+  /* Плавная анимация карточек */
+  .flight-card {
+    transition: all 0.3s ease;
+    flex: 0 0 auto;
+  }
+  
+  /* Кастомный скроллбар */
+  .overflow-x-auto::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 3px;
+  }
+</style>
+{% endblock %}

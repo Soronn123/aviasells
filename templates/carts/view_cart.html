@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Cart{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Your Cart</h1>
+    
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="px-4 py-2 rounded {% if message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if cart.items.all %}
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <table class="min-w-full">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left">Flight</th>
+                    <th class="px-6 py-3 text-left">Route</th>
+                    <th class="px-6 py-3 text-left">Price</th>
+                    <th class="px-6 py-3 text-left">Quantity</th>
+                    <th class="px-6 py-3 text-left">Total</th>
+                    <th class="px-6 py-3 text-left">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart.items.all %}
+                <tr class="border-t">
+                    <td class="px-6 py-4">{{ item.flight.flight_number }}</td>
+                    <td class="px-6 py-4">
+                        {{ item.flight.departure.city.name }} → 
+                        {{ item.flight.arrival.city.name }}
+                    </td>
+                    <td class="px-6 py-4">${{ item.flight.price }}</td>
+                    <td class="px-6 py-4">{{ item.quantity }}</td>
+                    <td class="px-6 py-4">${{ item.total_price }}</td>
+                    <td class="px-6 py-4">
+                        <form action="{% url 'remove_from_cart' item.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-600 hover:text-red-800">
+                                Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="flex justify-between items-center">
+        <a href="{% url 'flights_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+            Continue Booking
+        </a>
+        <a href=# class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+            Proceed to Checkout
+        </a>
+    </div>
+    {% else %}
+    <div class="bg-white p-8 rounded-lg shadow-md text-center">
+        <p class="text-gray-500 mb-4">Your cart is empty</p>
+        <a href="{% url 'flights_list' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+            Browse Flights
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Available Flights{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Available Flights</h1>
+    
+    <!-- Сообщения -->
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="px-4 py-2 rounded {% if message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Кнопки действий -->
+    <div class="mb-6">
+        <a href="{% url 'flight_map' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mr-3">
+            View Map
+        </a>
+        {% if is_manager %} 
+        <a href="{% url 'add_flight' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+            Add New Flight
+        </a>
+        {% endif %}
+    </div>
+    
+    <!-- Список рейсов -->
+    <div class="flex overflow-x-auto pb-4 gap-4">
+        {% for flight in flights %}
+        <div class="min-w-[300px] bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-4 bg-blue-600 text-white">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-lg">{{ flight.flight_number }}</h3>
+                    <span class="font-bold">${{ flight.price }}</span>
+                </div>
+            </div>
+            
+            <div class="p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h4 class="font-bold text-xl">{{ flight.departure.code }}</h4>
+                        <p class="text-gray-600">{{ flight.departure_time|date:"H:i, d M Y" }}</p>
+                    </div>
+                    <div class="text-2xl mx-2">→</div>
+                    <div>
+                        <h4 class="font-bold text-xl">{{ flight.arrival.code }}</h4>
+                        <p class="text-gray-600">{{ flight.arrival_time|date:"H:i, d M Y" }}</p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <p class="text-gray-700">Seats: {{ flight.seats_available }}</p>
+                    {% if flight.id in request.session.added_flights %}
+                    <a href="{% url 'view_cart' %}" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                        View Cart
+                    </a>
+                    {% else %}
+                    <form action="{% url 'add_to_cart' flight.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded">
+                            Add to Cart
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="w-full text-center py-8">
+            <p class="text-gray-500">No flights available</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

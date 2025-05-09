@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Add City{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold mb-6">Add New City</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="space-y-4">
+            <div>
+                <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    City Name
+                </label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.name.errors|join:", " }}</p>
+                {% endif %}
+                <p class="mt-1 text-sm text-gray-500">Example: Moscow, Beijing, Berlin</p>
+            </div>
+            
+            <div>
+                <label for="{{ form.country.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Country
+                </label>
+                {{ form.country }}
+                {% if form.country.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.country.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="mt-6 flex justify-between">
+            <a href="{% url 'manager_dashboard' %}" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                Cancel
+            </a>
+            <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                Save City
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

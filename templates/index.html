@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="relative bg-gradient-to-br from-blue-500 to-indigo-700 text-black py-20 overflow-hidden">
+    <div class="absolute inset-0 opacity-20">
+        <div class="absolute top-0 left-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')] bg-cover bg-center"></div>
+    </div>
+    
+    <div class="container mx-auto px-4 relative z-10 text-center animate__animated animate__fadeIn">
+        <h1 class="text-white md:text-6xl font-bold mb-6 text-shadow">Discover the World</h1>
+        <p class="text-white md:text-2xl mb-8 max-w-2xl mx-auto">Find the perfect flight for your next adventure at unbeatable prices</p>
+        
+        <div class="flex flex-col sm:flex-row justify-center gap-4 animate__animated animate__fadeInUp animate__delay-1s">
+            <a href="{% url 'flights_list' %}" class="bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-full text-lg font-semibold transition-slow hover-scale shadow-lg flex items-center justify-center">
+                <span class="material-icons mr-2">search</span> Search Flights
+            </a>
+            {% if not user.is_authenticated %}
+            <a href="{% url 'register' %}" class="border-2 border-white text-black hover:bg-white hover:text-blue-600 px-8 py-4 rounded-full text-lg font-semibold transition-slow hover-scale flex items-center justify-center">
+                <span class="material-icons mr-2">person_add</span> Join Now
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800 animate__animated animate__fadeIn">Why Choose SkyJourney?</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 animate__animated animate__fadeInLeft">
+                <div class="text-blue-500 text-4xl mb-4 flex justify-center">
+                    <span class="material-icons">savings</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-center">Best Price Guarantee</h3>
+                <p class="text-gray-600 text-center">We promise you'll find the best deals or we'll match the difference.</p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 animate__animated animate__fadeInUp">
+                <div class="text-blue-500 text-4xl mb-4 flex justify-center">
+                    <span class="material-icons">flight_takeoff</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-center">Global Coverage</h3>
+                <p class="text-gray-600 text-center">Over 5,000 destinations worldwide at your fingertips.</p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 animate__animated animate__fadeInRight">
+                <div class="text-blue-500 text-4xl mb-4 flex justify-center">
+                    <span class="material-icons">support_agent</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-center">24/7 Support</h3>
+                <p class="text-gray-600 text-center">Our team is always ready to assist you anytime, anywhere.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popular Destinations -->
+<div class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Popular Destinations</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Destination 1 -->
+            <div class="relative group overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-all duration-500 h-64">
+                <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
+                     alt="Paris" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+                    <div>
+                        <h3 class="text-white text-xl font-bold">Paris, France</h3>
+                        <p class="text-blue-200">From $299</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Destination 2 -->
+            <div class="relative group overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-all duration-500 h-64">
+                <img src="https://images.unsplash.com/photo-1504556106489-6d450910aeb3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
+                     alt="Tokyo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+                    <div>
+                        <h3 class="text-white text-xl font-bold">Tokyo, Japan</h3>
+                        <p class="text-blue-200">From $799</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Destination 3 -->
+            <div class="relative group overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-all duration-500 h-64">
+                <img src="https://images.unsplash.com/photo-1518391846015-55a9cc003b25?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
+                     alt="New York" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+                    <div>
+                        <h3 class="text-white text-xl font-bold">New York, USA</h3>
+                        <p class="text-blue-200">From $399</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Destination 4 -->
+            <div class="relative group overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-all duration-500 h-64">
+                <img src="https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
+                     alt="Bali" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+                    <div>
+                        <h3 class="text-black text-xl font-bold">Bali, Indonesia</h3>
+                        <p class="text-blue-200">From $599</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-10">
+            <a href="{% url 'flights_list' %}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all hover-scale">
+                Explore All Destinations
+                <span class="material-icons ml-2">arrow_forward</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials -->
+<div class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">What Our Travelers Say</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Testimonial 1 -->
+            <div class="bg-gray-50 p-6 rounded-xl shadow-sm">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
+                        <span class="material-icons">person</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">Sarah Johnson</h4>
+                        <div class="flex text-yellow-400">
+                            <span class="material-icons">star</span>
+                            <span class="material-icons">star</span>
+                            <span class="material-icons">star</span>
+                            <span class="material-icons">star</span>
+                            <span class="material-icons">star</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 italic">"Found amazing deals to Paris that no other site could match. The booking process was seamless!"</p>
+            </div>
+            
+            <!-- Testimonial 2 -->
+            <div class="bg-gray-50 p-6 rounded-xl shadow-sm">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
+                        <span class="material-icons">person</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">Michael Chen</h4>
+                        <div class="flex text-yellow-400">
+                            <span class="material-icons">star</span>
+                            <span class="material-icons">star</span>
+                            <span class="material-icons">star</span>
+                            <span class="material-icons">star</span>
+                            <span class="material-icons">star_half</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 italic">"Customer service helped me when my flight was delayed. They rebooked me on the next available flight at no extra cost."</p>
+            </div>
+            
+            <!-- Testimonial 3 -->
+            <div class="bg-gray-50 p-6 rounded-xl shadow-sm">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
+                        <span class="material-icons">person</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">Emma Rodriguez</h4>
+                        <div class="flex text-yellow-400">
+                            <span class="material-icons">star</span>
+                            <span class="material-icons">star</span>
+                            <span class="material-icons">star</span>
+                            <span class="material-icons">star</span>
+                            <span class="material-icons">star</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 italic">"The mobile app makes it so easy to book last-minute flights. I use SkyJourney for all my business trips."</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter -->
+<div class="py-16 bg-blue-600 text-white"> 
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-4">Stay Updated</h2>
+        <p class="text-xl mb-8 max-w-2xl mx-auto">Subscribe to get exclusive deals and travel inspiration straight to your inbox</p>
+        
+        <form class="max-w-md mx-auto flex">
+            <input type="email" placeholder="Your email address" 
+                   class="flex-grow px-4 py-3 rounded-l-lg focus:outline-none text-gray-800">
+            <button type="submit" class="bg-indigo-700 hover:bg-indigo-800 px-6 py-3 rounded-r-lg font-medium transition-all">
+                Subscribe
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
