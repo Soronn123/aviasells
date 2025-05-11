@@ -4,9 +4,6 @@ from django.contrib.auth.models import AbstractUser
 from cities.models import CountryModel
 
 class CustomUserModel(AbstractUser):
-    """
-    Custioom User Model
-    """
     middle_name = models.CharField(max_length=30, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
     country = models.ForeignKey(CountryModel, on_delete=models.SET_NULL, null=True, blank=True)

@@ -2,9 +2,6 @@ from django.db import models
 
 
 class CountryModel(models.Model):
-    """
-    Country model
-    """
     name = models.CharField(max_length=100, unique=True)
     is_country = models.BooleanField(default=True)
 
@@ -15,9 +12,6 @@ class CountryModel(models.Model):
         db_table = 'countries'
 
 class CityModel(models.Model):
-    """
-    City model
-    """
     name = models.CharField(max_length=100)
     country = models.ForeignKey(CountryModel, on_delete=models.CASCADE)
 

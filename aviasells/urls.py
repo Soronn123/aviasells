@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 
 from users import views as userViews 
 from ways import views as waysViews
@@ -48,4 +50,4 @@ urlpatterns = [
     path('cart/add/<int:flight_id>/', cartsViews.add_to_cart, name='add_to_cart'),
     path('cart/', cartsViews.view_cart, name='view_cart'),
     path('cart/remove/<int:item_id>/', cartsViews.remove_from_cart, name='remove_from_cart'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -3,7 +3,6 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto animate__animated animate__fadeIn">
-    <!-- Сообщения системы -->
     {% if messages %}
     <div class="mb-6">
         {% for message in messages %}
@@ -14,7 +13,6 @@
     </div>
     {% endif %}
 
-    <!-- Карточка профиля -->
     <div class="bg-white rounded-xl shadow-md overflow-hidden p-6 mb-8">
         <h2 class="text-3xl font-bold text-gray-800 mb-6">Your Profile</h2>
         
@@ -22,7 +20,6 @@
             {% csrf_token %}
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Поля формы -->
                 <div>
                     <label class="block text-gray-700 font-medium mb-2">First Name</label>
                     <input type="text" name="first_name" value="{{ user.first_name }}" 

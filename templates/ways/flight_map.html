@@ -3,10 +3,8 @@
 
 {% block content %}
 <div class="relative" style="height: calc(100vh - 180px);">
-  <!-- Контейнер карты - теперь занимает не всю высоту -->
   <div id="flightMap" class="h-[70%] w-full rounded-lg shadow-xl bg-gray-50"></div>
-  
-  <!-- Панель выбора рейсов - теперь с большим z-index и фиксированной высотой -->
+
   <div class="absolute bottom-0 left-0 right-0 h-[30%] bg-white bg-opacity-95 backdrop-blur-sm rounded-t-lg shadow-lg z-20 p-4 border-t border-gray-200 overflow-hidden">
     <h3 class="font-bold text-gray-800 mb-3">Available Flights</h3>
     <div class="flex space-x-4 overflow-x-auto pb-2" style="scrollbar-width: thin;">

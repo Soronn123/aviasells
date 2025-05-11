@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Flight System{% endblock %}</title>
+    {% tailwind_preload_css %}
     {% tailwind_css %}
+    <link rel="icon" href="{% static 'favicon.svg' %}?v=2">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -68,7 +70,7 @@
 
     <footer class="bg-gray-800 text-gray-300 py-6 mt-12">
         <div class="container mx-auto px-4 text-center">
-            <p class="animate__animated animate__fadeInUp">© 2025 FlightSystem. All rights reserved.</p>
+            <p class="animate__animated animate__fadeInUp">© 2025 lieQueen. All rights reserved.</p>
         </div>
     </footer>
 
