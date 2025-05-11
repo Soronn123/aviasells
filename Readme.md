@@ -1,6 +1,6 @@
 # ✈️ SkyTravel – система бронирования авиабилетов  
 
-![SkyTravel Preview](https://github.com/Soronn123/static/favicon.svg)  
+![SkyTravel Preview](https://github.com/Soronn123/aviasells/blob/main/static/favicon.svg)  
 
 **Современная платформа для поиска и бронирования авиабилетов**  
 Разработана на Python 3.13.3 с использованием Django и Tailwind CSS  
