@@ -86,8 +86,6 @@ SkyJourney/
 └── requirements.txt
 ```
 
----
-
 
 Разработано с ❤️ для авиапутешествий!  
 2026 | lieQueen
