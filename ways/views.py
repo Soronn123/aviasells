@@ -40,21 +40,20 @@ def add_flight(request):
 @login_required
 def my_flights(request):
     flights = FlightModel.objects.filter(
-        ticketmodel__user=request.user,
-        ticketmodel__status__in=['booked', 'used']
+        cartitem__cart__user=request.user
     ).distinct().select_related(
         'departure',
         'departure__city',
         'departure__city__country',
-        'arrival', 
+        'arrival',
         'arrival__city',
         'arrival__city__country'
-    ).prefetch_related('ticketmodel_set')
+    ).prefetch_related('cartitem_set')
     
     return render(request, 'ways/my_flights.html', {
         'flights': flights,
         'is_manager': request.user.is_manager,
-        'now': timezone.now() 
+        'now': timezone.now()
     })
 
 

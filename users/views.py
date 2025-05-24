@@ -62,8 +62,7 @@ def profile_view(request):
         return redirect('profile')
 
     flights = FlightModel.objects.filter(
-        ticketmodel__user=request.user,
-        ticketmodel__status__in=['booked', 'used']  
+        cartitem__cart__user=request.user
     ).distinct().select_related('departure', 'arrival')
     
     return render(request, 'users/profile.html', {
