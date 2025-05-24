@@ -36,15 +36,27 @@ def add_to_cart(request, flight_id):
     messages.success(request, f"Flight {flight.flight_number} has been added to your cart")
     return redirect('flights_list')
 
+
 def view_cart(request):
     if not request.user.is_authenticated:
+        messages.warning(request, "Please log in to view your cart")
         return redirect('login')
     
-    cart = get_object_or_404(Cart, user=request.user)
+    try:
+        cart = Cart.objects.get(user=request.user)
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(user=request.user)
+        return render(request, 'carts/view_cart.html', {'cart': None})
+    
+    cart_total = 0
     for item in cart.items.all():
         item.total_price = item.flight.price * item.quantity
-
-    return render(request, 'carts/view_cart.html', {'cart': cart})
+        cart_total += item.total_price
+    
+    return render(request, 'carts/view_cart.html', {
+        'cart': cart,
+        'cart_total': cart_total
+    })
 
 def remove_from_cart(request, item_id):
     if not request.user.is_authenticated:

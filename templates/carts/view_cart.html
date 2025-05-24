@@ -16,7 +16,7 @@
     </div>
     {% endif %}
     
-    {% if cart.items.all %}
+    {% if cart and cart.items.all %}
     <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
         <table class="min-w-full">
             <thead class="bg-gray-50">
@@ -50,6 +50,11 @@
                     </td>
                 </tr>
                 {% endfor %}
+                <tr class="border-t bg-gray-50">
+                    <td colspan="4" class="px-6 py-4 text-right font-bold">Total:</td>
+                    <td class="px-6 py-4 font-bold">${{ cart_total }}</td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
     </div>
